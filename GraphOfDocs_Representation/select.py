@@ -8,9 +8,9 @@ def get_communities_filenames(database):
     This function retrieves all filenames (and the file count) 
     for every community of similar documents.
     """
-    query = ('MATCH (i:Issue) RETURN i.community, '
-             'collect(i.key) AS files, '
-             'count(i.key) AS file_count '
+    query = ('MATCH (p:Paper) RETURN p.community, '
+             'collect(p.filename) AS files, '
+             'count(p.filename) AS file_count '
              'ORDER BY file_count DESC')
     results = database.execute(query, 'r')
     return results
@@ -24,8 +24,8 @@ def get_communities_tags(database, top_terms = None):
     # ranked by their in-degree (which shows to how many documents they belong to).
     # and pagerank score in descending order.
     top_tags = {}
-    query = ('MATCH p=((i:Issue)-[:includes]->(w:Word)) '
-             'WITH i.community as community, w, count(p) as degree '
+    query = ('MATCH p=((p1:Paper)-[:includes]->(w:Word)) '
+             'WITH p1.community as community, w, count(p) as degree '
              'WHERE degree > 1 '
              'WITH community as com, w.key as word, w.pagerank as pagerank, degree as deg '
              'ORDER BY com, deg DESC, pagerank DESC '
