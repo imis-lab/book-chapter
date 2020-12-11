@@ -84,3 +84,16 @@ def clear_screen(current_system):
     else:
         system('clear') # Linux/OS X.
     return
+
+def jaccard_similarity(list_1, list_2):
+    """
+    Function to calculate the jaccard similarity,
+    between two list. If either of them is empty,
+    the similarity is 0.0.
+    """
+    if not list_1 or not list_2:
+        return 0.0
+
+    set1 = set(list_1.keys())
+    set2 = set(list_2.keys())
+    return len(set1.intersection(set2)) / len(set1.union(set2))
