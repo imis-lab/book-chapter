@@ -94,3 +94,15 @@ def get_author_filenames(database, author_id):
     f'WHERE id(a)={author_id} RETURN id(a), collect(p.filename)'
     )
     return database.execute(query, 'r')
+
+def get_filename_community(database, filename):
+    query = (
+    f"MATCH (p:Paper) WHERE p.filename='{filename}' RETURN p.community"
+    )
+    return database.execute(query, 'r')
+
+def get_filenames_community(database):
+    query = (
+    f'MATCH (p:Paper) RETURN p.filename, p.community'
+    )
+    return database.execute(query, 'r')

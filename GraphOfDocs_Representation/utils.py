@@ -11,6 +11,10 @@ from nltk.corpus import wordnet, stopwords
 from nltk.stem.wordnet import WordNetLemmatizer
 from nltk.stem import PorterStemmer
 from nltk.tokenize import word_tokenize
+from GraphOfDocs_Representation.neo4j_wrapper import Neo4jDatabase
+from neo4j import ServiceUnavailable
+import sys
+
 
 lemmatizer = WordNetLemmatizer() # Initialize lemmatizer once.
 stemmer = PorterStemmer() # Initialize Porter's stemmer once.
@@ -94,6 +98,22 @@ def jaccard_similarity(list_1, list_2):
     if not list_1 or not list_2:
         return 0.0
 
-    set1 = set(list_1.keys())
-    set2 = set(list_2.keys())
+    set1 = set(list_1)
+    set2 = set(list_2)
     return len(set1.intersection(set2)) / len(set1.union(set2))
+
+def connect_to_the_database():
+    try:
+        database = Neo4jDatabase('bolt://localhost:7687', 'neo4j', '123')
+        # Neo4j server is unavailable.
+        # This client app cannot open a connection.
+    except ServiceUnavailable as error:
+        print('\t* Neo4j database is unavailable.')
+        print('\t* Please check the database connection before running this app.')
+        input('\t* Press any key to exit the app...')
+        sys.exit(1)
+
+    return database
+
+def disconnect_from_the_database(database):
+    database.close()
